@@ -23,6 +23,23 @@ function loadData() {
     // append the image on the page
     $body.append('<img class="bgimg" src="' + streetviewUrl + '">');
 
+    // ny times ajax request:
+    // the url with parameters to query
+    var nytimesUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+    nytimesUrl += '?' + $.param({
+    'api-key': "46ae31f1ca6949dfb80a2899464ebbbb",
+    'q': location,
+    'begin_date': '20100101',
+    'fl': 'web_url,snippet'
+    });
+
+    // get the .getJSON() working
+    $.getJSON(nytimesUrl, function(data){
+        console.log(data);
+    });
+
+
+
 
 
 
