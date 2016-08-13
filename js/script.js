@@ -30,12 +30,14 @@ function loadData() {
     'api-key': "46ae31f1ca6949dfb80a2899464ebbbb",
     'q': location,
     'begin_date': '20100101',
-    'fl': 'web_url,snippet'
+    'fl': 'web_url,snippet,headline'
     });
 
-    // get the .getJSON() working
-    $.getJSON(nytimesUrl, function(data){
-        console.log(data);
+    // parse received json object and append the data on DOM tree
+    $.getJSON(nytimesUrl, function(json){
+        $.each(json.response.docs, function(i, object){
+            $nytElem.append( '<li class="article"><a href="' + object.web_url + '">' + object.headline.main + '</a><p>' + object.snippet + '</p>' );
+        });
     });
 
 
