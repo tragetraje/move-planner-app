@@ -35,10 +35,13 @@ function loadData() {
 
     // parse received json object and append the data on DOM tree
     $.getJSON(nytimesUrl, function(json){
+        $nytHeaderElem.text('NY Times articles about ' + cityVal);
         $.each(json.response.docs, function(i, object){
             $nytElem.append( '<li class="article"><a href="' + object.web_url + '">' + object.headline.main + '</a><p>' + object.snippet + '</p>' );
         });
-    });
+    }).fail(function(){
+          $nytHeaderElem.text('NY Times articles about could not be loaded ');
+        });
 
 
 
