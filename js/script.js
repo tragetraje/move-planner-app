@@ -27,7 +27,7 @@ function loadData() {
     // the url with parameters to query
     var nytimesUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
     nytimesUrl += '?' + $.param({
-    'api-key': "46ae31f1ca6949dfb80a2899464ebbbb",
+    'api-key': '46ae31f1ca6949dfb80a2899464ebbbb',
     'q': location,
     'begin_date': '20100101',
     'fl': 'web_url,snippet,headline'
@@ -42,6 +42,38 @@ function loadData() {
     }).fail(function(){
           $nytHeaderElem.text('NY Times articles about could not be loaded ');
         });
+
+    // wikipedia ajax request:
+    // e.g: https://en.wikipedia.org/wiki/Special:ApiSandbox#action=query&titles=Albert%20Einstein&prop=info&format=jsonfm
+    // https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
+
+    var wikipediaUrl = 'https://en.wikipedia.org/w/api.php';
+    wikipediaUrl += '?' + $.param({
+        //'action': 'query',
+        //'titles': cityVal,
+        'action': 'opensearch',
+        'search': cityVal,
+        //'prop': 'revisions',
+        //'rvprop': 'content',
+        //'prop': 'info',
+        'format': 'json',
+        'callback': 'wikiCallback'
+    });
+
+    $.ajax(wikipediaUrl, {
+      dataType: 'jsonp',
+      success: handleData
+    });
+
+    function handleData(data) {
+      // populate data on the page
+      //console.log(data);
+        $.each(data, function(i, array){
+          $wikiElem.append('<li><a href="#">' + array + '</a></li>' );
+          //<li><a href="url">Title</a></li>
+          //console.log(data);
+        });
+    }
 
 
 
