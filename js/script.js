@@ -1,4 +1,3 @@
-
 function loadData() {
 
     var $body = $('body');
@@ -13,8 +12,8 @@ function loadData() {
 
     // load streetview:
     // collect the values of street address and city of submit form
-    var streetVal = $( "#street" ).val();
-    var cityVal = $( "#city" ).val();
+    var streetVal = $("#street").val();
+    var cityVal = $("#city").val();
     var location = cityVal + ' ,' + streetVal;
 
     // street view url
@@ -27,21 +26,21 @@ function loadData() {
     // the url with parameters to query
     var nytimesUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
     nytimesUrl += '?' + $.param({
-    'api-key': '46ae31f1ca6949dfb80a2899464ebbbb',
-    'q': location,
-    'begin_date': '20100101',
-    'fl': 'web_url,snippet,headline'
+        'api-key': '46ae31f1ca6949dfb80a2899464ebbbb',
+        'q': location,
+        'begin_date': '20100101',
+        'fl': 'web_url,snippet,headline'
     });
 
     // parse received json object and append the data on DOM tree
-    $.getJSON(nytimesUrl, function(json){
+    $.getJSON(nytimesUrl, function(json) {
         $nytHeaderElem.text('NY Times articles about ' + cityVal);
-        $.each(json.response.docs, function(i, object){
-            $nytElem.append( '<li class="article"><a href="' + object.web_url + '">' + object.headline.main + '</a><p>' + object.snippet + '</p>' );
+        $.each(json.response.docs, function(i, object) {
+            $nytElem.append('<li class="article"><a href="' + object.web_url + '">' + object.headline.main + '</a><p>' + object.snippet + '</p>');
         });
-    }).fail(function(){
-          $nytHeaderElem.text('NY Times articles about could not be loaded ');
-        });
+    }).fail(function() {
+        $nytHeaderElem.text('NY Times articles about' + cityVal + 'could not be loaded');
+    });
 
     // wikipedia ajax request:
     // the url:
@@ -53,17 +52,23 @@ function loadData() {
         'callback': 'wikiCallback'
     });
 
+    // set timeout for failed request error message
+    var wikiRequestTimeout = setTimeout(function() {
+        $wikiElem.text('Wikipedia articles can not be loaded');
+    }, 8000);
+
     $.ajax(wikipediaUrl, {
-      dataType: 'jsonp',
-      success: handleData
-    });
+        dataType: 'jsonp'
+    }).done(handleData);
 
     function handleData(data) {
-      // iterate through response and populate data on the page
-        $.each(data[1], function(i, articleStr){
-          var url = 'http://wikipedia.org/wiki/' + articleStr;
-          $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>' );
+        // iterate through response and populate data on the page
+        $.each(data[1], function(i, articleStr) {
+            var url = 'http://wikipedia.org/wiki/' + articleStr;
+            $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
         });
+        // clear timeout if the request succeeds
+        clearTimeout(wikiRequestTimeout);
     }
 
 
