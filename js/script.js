@@ -44,18 +44,11 @@ function loadData() {
         });
 
     // wikipedia ajax request:
-    // e.g: https://en.wikipedia.org/wiki/Special:ApiSandbox#action=query&titles=Albert%20Einstein&prop=info&format=jsonfm
-    // https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
-
+    // the url:
     var wikipediaUrl = 'https://en.wikipedia.org/w/api.php';
     wikipediaUrl += '?' + $.param({
-        //'action': 'query',
-        //'titles': cityVal,
         'action': 'opensearch',
         'search': cityVal,
-        //'prop': 'revisions',
-        //'rvprop': 'content',
-        //'prop': 'info',
         'format': 'json',
         'callback': 'wikiCallback'
     });
@@ -66,12 +59,10 @@ function loadData() {
     });
 
     function handleData(data) {
-      // populate data on the page
-      //console.log(data);
-        $.each(data, function(i, array){
-          $wikiElem.append('<li><a href="#">' + array + '</a></li>' );
-          //<li><a href="url">Title</a></li>
-          //console.log(data);
+      // iterate through response and populate data on the page
+        $.each(data[1], function(i, articleStr){
+          var url = 'http://wikipedia.org/wiki/' + articleStr;
+          $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>' );
         });
     }
 
