@@ -70,13 +70,7 @@ function loadData() {
         // clear timeout if the request succeeds
         clearTimeout(wikiRequestTimeout);
     }
-
-
-
-
-
-
-
+    
     return false;
 };
 
